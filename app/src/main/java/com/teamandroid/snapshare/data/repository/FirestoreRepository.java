@@ -1,9 +1,13 @@
 package com.teamandroid.snapshare.data.repository;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -11,6 +15,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.teamandroid.snapshare.data.model.Post;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FirestoreRepository {
@@ -54,6 +59,33 @@ public class FirestoreRepository {
                         callback.onFailure(e);
                     }
                 });
+    }
+
+
+    public void getPostsOf(String userId, final Callback<List<Post>> callback) {
+
+        mFirestore.collection(Post.POST_COLLECTION)
+                .whereEqualTo(Post.FIELD_USER_ID, userId)
+                .orderBy(Post.FIELD_CREATED_AT,Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Post> posts = new ArrayList<>();
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            Post post = document.toObject(Post.class);
+                            posts.add(post);
+                        }
+                        callback.onSuccess(posts);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
+
     }
 
     public void addPost(Post post, final Callback<Void> callback) {

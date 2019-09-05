@@ -14,4 +14,11 @@ public class Constants {
 
     public static final int LIKE_ACTIVE = 1;
     public static final int LIKE_NON_ACTIVE = 0;
+
+    /*Profile*/
+    public static final String PROFILE_USER_TAG = "userId";
+    public static final String PROFILE_USER_ID = "userId";
+    public static final String PROFILE_USER_GIVEN_NAME = "";
+    public static final String PROFILE_USER_DISPLAY_NAME = "";
+    public static final String PROFILE_USER_AVATAR = "";
 }

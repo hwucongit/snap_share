@@ -21,6 +21,11 @@
 
     <dimen name="sign_up_title_top_margin">50dp</dimen>
     <dimen name="sign_up_title_bottom_margin">30dp</dimen>
+
+    <!--Sign up Screen, Home Tab-->
+    <dimen name="margin_logo">50dp</dimen>
+    <dimen name="width_logo">100dp</dimen>
+    <dimen name="height_logo">100dp</dimen>
     <dimen name="width_stroke_edit_text">1dp</dimen>
     <dimen name="margin_edit_text">10dp</dimen>
     <dimen name="padding_edit_text">10dp</dimen>
@@ -49,4 +54,8 @@
     <dimen name="card_username_text_size">24sp</dimen>
     <dimen name="card_username_margin_start">16dp</dimen>
     <dimen name="user_list_margin_top">36dp</dimen>
+
+    <!--Profile Tab-->
+    <dimen name="profile_image_size_72dp">72dp</dimen>
+    <dimen name="profile_list_margin_top__10dp">10dp</dimen>
 </resources>

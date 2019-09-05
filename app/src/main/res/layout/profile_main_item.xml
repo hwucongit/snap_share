@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    
+    <data>
+
+        <variable
+            name="Post"
+            type="com.teamandroid.snapshare.data.model.Post" />
+    </data>
+
+    <androidx.cardview.widget.CardView android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="2dp"
+        app:cardPreventCornerOverlap="false"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/profile_post_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            imageUrl="@{Post.imageUrl}"/>
+
+    </androidx.cardview.widget.CardView>
+</layout>

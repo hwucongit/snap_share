@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.ui.login.LoginActivity;
 import com.teamandroid.snapshare.ui.main.home.HomeFragment;
+import com.teamandroid.snapshare.ui.main.profile.ProfileFragment;
 import com.teamandroid.snapshare.ui.main.search.SearchFragment;
 import com.teamandroid.snapshare.ui.post.PostActivity;
 
@@ -45,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_account:
                     //TODO
+                    ProfileFragment profileFragment = ProfileFragment.newInstance();
+                    mFragmentManager.beginTransaction()
+                            .replace(R.id.content_container, profileFragment)
+                            .addToBackStack(null)
+                            .commit();
                     return true;
             }
 
