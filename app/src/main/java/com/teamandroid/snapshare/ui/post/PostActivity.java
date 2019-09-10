@@ -6,18 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.Post;
 import com.teamandroid.snapshare.databinding.ActivityPostBinding;
 import com.teamandroid.snapshare.utils.Helper;
 import com.theartofdev.edmodo.cropper.CropImage;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 public class PostActivity extends AppCompatActivity {
     private ActivityPostBinding mBinding;
@@ -67,7 +66,7 @@ public class PostActivity extends AppCompatActivity {
                     finish();
                 else
                     Helper.showToast(getApplicationContext(),
-                        getResources().getString(R.string.fail_try_again_later));
+                            getResources().getString(R.string.fail_try_again_later));
             }
         });
     }
@@ -84,8 +83,8 @@ public class PostActivity extends AppCompatActivity {
 
     private void openChooseImageScreen() {
         CropImage
-            .activity()
-            .start(this);
+                .activity()
+                .start(this);
     }
 
     @Override

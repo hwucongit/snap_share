@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="post"
-            type="com.teamandroid.snapshare.data.model.Post" />
+            name="viewModel"
+            type="com.teamandroid.snapshare.ui.main.home.PostItemViewModel" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,7 +28,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/iv_user_profile"
-                    avatarUrl="@{post.avatarUrl}"
+                    avatarUrl="@{viewModel.avatarUrl}"
                     android:layout_width="@dimen/image_profile_width"
                     android:layout_height="@dimen/image_profile_height" />
 
@@ -43,12 +43,12 @@
                         android:id="@+id/tv_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{post.author}"
+                        android:text="@{viewModel.author}"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_time"
-                        createdAt="@{post.createdAt}"
+                        createdAt="@{viewModel.createdAt}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -61,8 +61,8 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_post_center"
-                    imageUrl="@{post.imageUrl}"
+                    android:id="@+id/iv_viewModel_center"
+                    imageUrl="@{viewModel.imageUrl}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
@@ -92,7 +92,7 @@
                     android:id="@+id/tv_user_name_des"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{post.author}"
+                    android:text="@{viewModel.author}"
                     android:textStyle="bold" />
 
                 <TextView
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/post_default_margin"
-                    android:text="@{post.caption}" />
+                    android:text="@{viewModel.caption}" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,7 +136,7 @@
 
                     <TextView
                         android:id="@+id/tv_like_counter"
-                        likeCount="@{post.likeCount}"
+                        likeCount="@{viewModel.likeCount}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_like_counter" />

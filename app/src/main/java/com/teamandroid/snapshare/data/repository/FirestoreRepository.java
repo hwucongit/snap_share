@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamandroid.snapshare.data.model.Post;
 
@@ -33,13 +34,15 @@ public class FirestoreRepository {
 
     public void getAllPosts(final Callback<List<Post>> callback) {
 
-        mFirestore.collection(Post.POST_COLLECTION).orderBy(Post.FIELD_CREATED_AT).get()
+        mFirestore.collection(Post.POST_COLLECTION).orderBy(Post.FIELD_CREATED_AT, Query.Direction.DESCENDING)
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<Post> posts = new ArrayList<>();
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                             Post post = document.toObject(Post.class);
+                            post.setId(document.getId());
                             posts.add(post);
                         }
                         callback.onSuccess(posts);
@@ -67,7 +70,23 @@ public class FirestoreRepository {
                         callback.onFailure(e);
                     }
                 });
+    }
 
+    public void updateLike(String id, ArrayList<String> likes, final Callback<Void> callback) {
+        mFirestore.collection(Post.POST_COLLECTION).document(id).update(Post.FIELD_LIKES, likes)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
+        mFirestore.collection(Post.POST_COLLECTION).document(id).update(Post.FIELD_LIKE_COUNT, likes.size())
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
     }
 
     public interface Callback<T> {
