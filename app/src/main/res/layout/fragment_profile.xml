@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/profile_avatar"
-                android:text="Lorem ipsum display name"
+                android:text="@string/username"
                 android:layout_margin="@dimen/post_default_margin"
                 android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile_display_name"
                 android:layout_alignLeft="@+id/profile_display_name"
-                android:text="Lorem ipsum display email" />
+                android:text="@string/full_name" />
 
             <TextView
                 android:id="@+id/profile_posts_number"
@@ -71,12 +71,15 @@
                 android:layout_centerInParent="true"
                 android:text="1000 posts"/>
 
-            <ImageButton
-                android:id="@+id/profile_button_follow"
+            <Button
+                android:id="@+id/button_follow"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_follow_user" />
+                android:layout_height="@dimen/height_button_follow"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_toRightOf="@id/profile_display_name"
+                android:background="@drawable/background_button_register"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"/>
 
         </RelativeLayout>
 

@@ -1,6 +1,7 @@
 package com.teamandroid.snapshare.ui.main.search;
 
-
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +19,27 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.User;
+import com.teamandroid.snapshare.ui.main.MainActivity;
+import com.teamandroid.snapshare.ui.main.profile.ProfileFragment;
+import com.teamandroid.snapshare.utils.Constants;
+import com.teamandroid.snapshare.utils.Helper;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements UserListAdapter.OnItemClickListener {
     private Toolbar mToolbar;
     private TextView mTextViewResult;
     private SearchView mSearchView;
     private UserSearchViewModel mViewModel;
     private RecyclerView mUserListRv;
     private UserListAdapter mAdapter;
+    private Context mContext;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -87,6 +94,7 @@ public class SearchFragment extends Fragment {
         mUserListRv = view.findViewById(R.id.user_list_rv);
         mUserListRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new UserListAdapter();
+        mAdapter.setOnItemClickListener(this);
         mUserListRv.setAdapter(mAdapter);
     }
 
@@ -98,9 +106,22 @@ public class SearchFragment extends Fragment {
                     mTextViewResult.setText(getString(R.string.search_no_resutl));
                 } else
                     mTextViewResult.setText(String.format(
-                            getString(R.string.search_result), users.size(), users.size() > 1 ? "s" : ""));
+                        getString(R.string.search_result), users.size(),
+                        users.size() > 1 ? "s" : ""));
                 mAdapter.setUserList(users);
             }
         });
+    }
+
+    @Override
+    public void onClick(String userId) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null)
+            mainActivity.replaceProfileFragment(userId);
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 }

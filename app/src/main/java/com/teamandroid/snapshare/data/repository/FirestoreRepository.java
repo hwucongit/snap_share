@@ -13,9 +13,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamandroid.snapshare.data.model.Post;
+import com.teamandroid.snapshare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class FirestoreRepository {
@@ -121,6 +123,34 @@ public class FirestoreRepository {
                 });
     }
 
+    public void followUser(String currentUserId, String userId) {
+        HashMap<Object,Object> emptyData = new HashMap<>();
+        mFirestore.collection(Constants.COLLECTION_FOLLOW)
+            .document(currentUserId)
+            .collection(Constants.FOLLOW_FIELD_FOLLOWING)
+            .document(userId)
+            .set(emptyData);
+
+        mFirestore.collection(Constants.COLLECTION_FOLLOW)
+            .document(userId)
+            .collection(Constants.FOLLOW_FIELD_FOLLOWER)
+            .document(currentUserId)
+            .set(emptyData);
+    }
+
+    public void unFollowUser(String currentUserId, String userId) {
+        mFirestore.collection(Constants.COLLECTION_FOLLOW)
+            .document(currentUserId)
+            .collection(Constants.FOLLOW_FIELD_FOLLOWING)
+            .document(userId)
+            .delete();
+
+        mFirestore.collection(Constants.COLLECTION_FOLLOW)
+            .document(userId)
+            .collection(Constants.FOLLOW_FIELD_FOLLOWER)
+            .document(currentUserId)
+            .delete();
+    }
     public interface Callback<T> {
 
         void onSuccess(T result);

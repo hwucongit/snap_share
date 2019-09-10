@@ -25,11 +25,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.Post;
 import com.teamandroid.snapshare.ui.login.LoginActivity;
+import com.teamandroid.snapshare.ui.main.MainActivity;
 
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements PostListAdapter.OnClickListener {
     public static String TAG = HomeFragment.class.getSimpleName();
     private Toolbar mToolbar;
     private PostViewModel mPostViewModel;
@@ -65,6 +66,7 @@ public class HomeFragment extends Fragment {
         postListRv = view.findViewById(R.id.rv_feed);
         postListRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PostListAdapter();
+        mAdapter.setOnClickListener(this);
         postListRv.setAdapter(mAdapter);
     }
 
@@ -122,5 +124,12 @@ public class HomeFragment extends Fragment {
                 mPostViewModel.loadPosts();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(String userId) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null)
+            mainActivity.replaceProfileFragment(userId);
     }
 }
