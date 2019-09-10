@@ -61,6 +61,8 @@ ext {
     firebase_storage_version = "19.0.0"
     image_cropper_version = "2.8.0"
     angolia_search_android = "3.+"
+    glide_recyclerview_integration = "4.9.0"
+    androidx_annotation = "1.1.0"
 }
 
 dependencies {
@@ -83,9 +85,15 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$play_service_version"
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
 
+    // Images
     implementation "com.squareup.picasso:picasso:$picasso_version"
     implementation "com.github.bumptech.glide:glide:$glide_version"
+
+    annotationProcessor "androidx.annotation:annotation:$androidx_annotation"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+
+
+
     implementation "de.hdodenhof:circleimageview:$circle_imageview_version"
     implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
     implementation "com.theartofdev.edmodo:android-image-cropper:$image_cropper_version"

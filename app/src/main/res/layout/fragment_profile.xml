@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="ProfileViewModel"
+            type="com.teamandroid.snapshare.ui.main.profile.ProfileViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:elevation="@dimen/default_elevation"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/profile_personal_bar"
+            android:layout_below="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/post_default_padding"
+            android:background="@color/style_color_accent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_avatar"
+                android:layout_width="@dimen/profile_image_size_72dp"
+                android:layout_height="@dimen/profile_image_size_72dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/post_default_margin"
+                android:layout_marginTop="@dimen/post_default_margin"
+                android:layout_marginEnd="@dimen/post_default_margin"
+                android:layout_marginBottom="@dimen/post_default_margin"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/profile_display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/profile_avatar"
+                android:text="Lorem ipsum display name"
+                android:layout_margin="@dimen/post_default_margin"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_display_name"
+                android:layout_alignLeft="@+id/profile_display_name"
+                android:text="Lorem ipsum display email" />
+
+            <TextView
+                android:id="@+id/profile_posts_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_email"
+                android:layout_centerInParent="true"
+                android:text="1000 posts"/>
+
+            <ImageButton
+                android:id="@+id/profile_button_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_follow_user" />
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profile_posts_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/profile_list_margin_top__10dp"
+            android:layout_below="@+id/profile_personal_bar"/>
+
+    </RelativeLayout>
+</layout>
