@@ -21,18 +21,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostViewHolder> {
     private List<Post> mPosts = new ArrayList<>();
+    private OnClickListener mOnClickListener;
 
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         PostItemBinding postItemBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.getContext()), R.layout.post_item, parent, false);
+            LayoutInflater.from(parent.getContext()), R.layout.post_item, parent, false);
         return new PostViewHolder(postItemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         holder.onBind(position);
+    }
+
+    void setOnClickListener(OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
     }
 
     void setPostList(List<Post> posts) {
@@ -63,6 +68,18 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                     onLikeClick(view);
                 }
             });
+            mPostItemBinding.ivUserProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnClickListener.onClick(mPost.getUserId());
+                }
+            });
+            mPostItemBinding.tvUserName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnClickListener.onClick(mPost.getUserId());
+                }
+            });
         }
 
         public void onBind(int position) {
@@ -73,7 +90,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 mPostItemBinding.btnLike.setImageResource(R.drawable.ic_heart_active);
             }
             currentLikeStatus = mPostItemViewModel.checkLike(mFirebaseUser.getUid()) ?
-                    Constants.LIKE_ACTIVE : Constants.LIKE_NON_ACTIVE;
+                Constants.LIKE_ACTIVE : Constants.LIKE_NON_ACTIVE;
             if (mPostItemViewModel.getLikeCount().getValue() != null)
                 likeCount = mPostItemViewModel.getLikeCount().getValue();
             mPostItemBinding.executePendingBindings();
@@ -81,13 +98,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 
         private void onLikeClick(View view) {
             mPostItemBinding.btnLike.setImageResource(currentLikeStatus == 1 ?
-                    R.drawable.ic_favorite_border_black : R.drawable.ic_heart_active);
+                R.drawable.ic_favorite_border_black : R.drawable.ic_heart_active);
             likeCount = currentLikeStatus == Constants.LIKE_ACTIVE ? likeCount - 1 : likeCount + 1;
             mPostItemViewModel.likeCount.setValue(likeCount);
-            mPostItemBinding.tvLikeCounter.setText(String.format(view.getContext().getString(R.string.like_counter),
+            mPostItemBinding.tvLikeCounter
+                .setText(String.format(view.getContext().getString(R.string.like_counter),
                     likeCount, likeCount > 1 ? "s" : ""));
             mPostItemViewModel.updateLike(currentLikeStatus, mFirebaseUser.getUid());
-            currentLikeStatus = (currentLikeStatus == Constants.LIKE_ACTIVE) ? Constants.LIKE_NON_ACTIVE : Constants.LIKE_ACTIVE;
+            currentLikeStatus =
+                (currentLikeStatus == Constants.LIKE_ACTIVE) ? Constants.LIKE_NON_ACTIVE :
+                    Constants.LIKE_ACTIVE;
         }
+    }
+
+    interface OnClickListener {
+        void onClick(String userId);
     }
 }

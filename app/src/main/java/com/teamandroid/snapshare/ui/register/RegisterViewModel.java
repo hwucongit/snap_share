@@ -71,7 +71,7 @@ public class RegisterViewModel extends ViewModel {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             final User user = new User(
                                     currentUser.getUid(), userRegister.getUsername(),
-                                    userRegister.getFullName(), Constants.VALUE_DEFAULT);
+                                    userRegister.getFullName(), Constants.DEFAULT_AVATAR_URL);
                             mFirestore
                                     .collection(User.COLLECTION)
                                     .document(currentUser.getUid())

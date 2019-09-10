@@ -1,6 +1,7 @@
 package com.teamandroid.snapshare.ui.main.search;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.User;
 import com.teamandroid.snapshare.databinding.UserItemBinding;
+import com.teamandroid.snapshare.generated.callback.OnClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
     private List<User> mUsers = new ArrayList<>();
-
+    private OnItemClickListener mOnItemClickListener;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -26,10 +28,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.mUserItemBinding.setUser(mUsers.get(position));
+        holder.mUserItemBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnItemClickListener.onClick(mUsers.get(position).getId());
+            }
+        });
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
     public void setUserList(List<User> users) {
         mUsers.clear();
         mUsers.addAll(users);
@@ -49,5 +60,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             mUserItemBinding = itemBinding;
         }
     }
-
+    interface OnItemClickListener {
+        void onClick(String userId);
+    }
 }

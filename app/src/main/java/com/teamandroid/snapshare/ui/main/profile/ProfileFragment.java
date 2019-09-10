@@ -1,6 +1,5 @@
 package com.teamandroid.snapshare.ui.main.profile;
 
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,40 +32,34 @@ import com.teamandroid.snapshare.utils.Constants;
 
 import java.util.List;
 
-
 public class ProfileFragment extends Fragment {
     private final int colNumb = 3;
-
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private ProfilePostAdapter mProfilePostAdapter;
-
+    private String mUserId;
     private FragmentProfileBinding mBinding;
     private ProfileViewModel mProfileViewModel;
+    private String mCurrentUserId;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-
-    public static ProfileFragment newInstance() {
+    public static ProfileFragment newInstance(@NonNull Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        //View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         init(mBinding.getRoot());
-
         return mBinding.getRoot();
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -74,50 +67,62 @@ public class ProfileFragment extends Fragment {
         mProfileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         mBinding.setProfileViewModel(mProfileViewModel);
         mBinding.setLifecycleOwner(this);
-
-        //FIXME: hard link from GoogleAuth
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String id = "";
-        if (user != null) {
-            id = user.getUid();
-        }
-        mProfileViewModel.getPosts(id);
-
         handleArguments();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mCurrentUserId = user.getUid();
+        }
+        if (mUserId != null && user != null && mUserId.equals(user.getUid())) {
+            mBinding.buttonFollow.setVisibility(View.GONE);
+        }
+        if (mUserId != null && user != null && !mUserId.equals(user.getUid())){
+            mProfileViewModel.checkFollowingState(user.getUid(),mUserId);
+            listenFollow();
+        }
+        mProfileViewModel.getPosts(mUserId);
         listenToPosts();
     }
 
-
-//    @Override
-//    public void onItemClick(View view, int position) {
-//        // TODO: add to back stack, open detail fragment
-//        Toast.makeText(getContext(), "Clicked at: " + position,  Toast.LENGTH_SHORT).show();
-//        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//        fragmentTransaction.replace(R.id.content_container, ProfileDetailedFragment.newInstance());
-//        fragmentTransaction.addToBackStack(this.getClass().getName());
-//        fragmentTransaction.commit();
-//    }
-
+    private void listenFollow() {
+        mProfileViewModel.getIsFollowed().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean)
+                    mBinding.buttonFollow.setText(getResources().getString(R.string.un_follow));
+                else
+                    mBinding.buttonFollow.setText(getResources().getString(R.string.follow));
+            }
+        });
+    }
 
 
     private void init(View rootView) {
         mToolbar = rootView.findViewById(R.id.toolbar);
         setToolbar();
-
         mRecyclerView = rootView.findViewById(R.id.profile_posts_list);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), colNumb));
-
         mProfilePostAdapter = new ProfilePostAdapter();
         mRecyclerView.setAdapter(mProfilePostAdapter);
-
+        mBinding.buttonFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mProfileViewModel.getIsFollowed().getValue() != null) {
+                    if (mProfileViewModel.getIsFollowed().getValue())
+                        mProfileViewModel.unFollowUser(mCurrentUserId,mUserId);
+                    else
+                        mProfileViewModel.followUser(mCurrentUserId,mUserId);
+                }
+            }
+        });
     }
-
 
     private void handleArguments() {
         //FIXME: get args from getArguments
         // Handle passed arguments to define running mode
-//        Bundle args = getArguments();
-        Bundle args = new Bundle();
+        Bundle args = getArguments();
+        if (args != null) {
+            mUserId = args.getString(Constants.ARGUMENT_USER_ID);
+        }
         if (mProfileViewModel.displayingCurrentUser(args)) {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
             mProfileViewModel.setProfileUser(account);
@@ -126,21 +131,20 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-
     private void setToolbar() {
-        FragmentActivity fragmentActivity =  getActivity();
+        FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity == null) return;
         ((AppCompatActivity) fragmentActivity).setSupportActionBar(mToolbar);
     }
 
-
     private void listenToPosts() {
-        mProfileViewModel.getUserPosts().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
-            @Override
-            public void onChanged(List<Post> posts) {
-                mProfilePostAdapter.setData(posts);
-            }
-        });
+        mProfileViewModel.getUserPosts()
+            .observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+                @Override
+                public void onChanged(List<Post> posts) {
+                    mProfilePostAdapter.setData(posts);
+                }
+            });
     }
 }
 
