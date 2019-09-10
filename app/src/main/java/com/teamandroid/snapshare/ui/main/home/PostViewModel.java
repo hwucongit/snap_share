@@ -21,7 +21,7 @@ public class PostViewModel extends ViewModel {
         return mPosts;
     }
 
-    private void loadPosts() {
+    public void loadPosts() {
         mFirestoreRepository.getAllPosts(new FirestoreRepository.Callback<List<Post>>() {
             @Override
             public void onSuccess(List<Post> result) {
@@ -34,6 +34,5 @@ public class PostViewModel extends ViewModel {
             }
         });
     }
-
 }
 

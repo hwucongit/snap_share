@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.teamandroid.snapshare.R;
@@ -34,6 +35,7 @@ public class HomeFragment extends Fragment {
     private PostViewModel mPostViewModel;
     private PostListAdapter mAdapter;
     private RecyclerView postListRv;
+    private SwipeRefreshLayout mRefreshLayout;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -87,6 +89,13 @@ public class HomeFragment extends Fragment {
 
     private void initView(View view) {
         mToolbar = view.findViewById(R.id.toolbar);
+        mRefreshLayout = view.findViewById(R.id.layout_refresh);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPostViewModel.loadPosts();
+            }
+        });
     }
 
     private void getPosts() {
@@ -94,6 +103,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(List<Post> posts) {
                 mAdapter.setPostList(posts);
+                mRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -107,8 +117,10 @@ public class HomeFragment extends Fragment {
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 if (getActivity() != null) getActivity().finish();
                 return true;
+            case R.id.refresh:
+                mRefreshLayout.setRefreshing(true);
+                mPostViewModel.loadPosts();
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

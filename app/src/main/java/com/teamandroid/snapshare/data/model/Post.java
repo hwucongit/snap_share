@@ -1,15 +1,9 @@
 package com.teamandroid.snapshare.data.model;
 
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.databinding.BindingAdapter;
-
-import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
-import com.teamandroid.snapshare.R;
-import com.teamandroid.snapshare.utils.Helper;
+
+import java.util.ArrayList;
 
 public class Post {
     public static final String POST_COLLECTION = "Posts";
@@ -20,6 +14,8 @@ public class Post {
     public static final String FIELD_CAPTION = "caption";
     public static final String FIELD_LIKE_COUNT = "likeCount";
     public static final String FIELD_CREATED_AT = "createdAt";
+    public static final String FIELD_LIKES = "likes";
+    private String mId;
     @PropertyName(FIELD_AUTHOR)
     private String mAuthor;
     @PropertyName(FIELD_USER_ID)
@@ -34,8 +30,14 @@ public class Post {
     private Integer mLikeCount;
     @PropertyName(FIELD_CREATED_AT)
     private Timestamp mCreatedAt;
+    @PropertyName(FIELD_LIKES)
+    private ArrayList<String> mLikes;
 
     public Post() {
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public String getAuthor() {
@@ -66,6 +68,14 @@ public class Post {
         return mCreatedAt;
     }
 
+    public ArrayList<String> getLikes() {
+        return mLikes;
+    }
+
+    public void setId(String id) {
+        this.mId = id;
+    }
+
     public void setAuthor(String mAuthor) {
         this.mAuthor = mAuthor;
     }
@@ -86,6 +96,7 @@ public class Post {
         this.mCaption = mCaption;
     }
 
+
     public void setLikeCount(Integer mLikeCount) {
         this.mLikeCount = mLikeCount;
     }
@@ -94,24 +105,7 @@ public class Post {
         this.mCreatedAt = mCreatedAt;
     }
 
-    @BindingAdapter({"likeCount"})
-    public static void loadLikeCounter(TextView textView, Integer likeCount) {
-            textView.setText(String.format(textView.getContext().getString(R.string.like_counter),
-                    likeCount, likeCount > 1 ? "s" : ""));
-    }
-
-    @BindingAdapter({"imageUrl"})
-    public static void loadImagePost(ImageView imageView, String imageUrl) {
-        Glide.with(imageView).load(imageUrl).into(imageView);
-    }
-
-    @BindingAdapter({"avatarUrl"})
-    public static void loadAvatar(ImageView imageView, String imageUrl) {
-        Glide.with(imageView).load(imageUrl).into(imageView);
-    }
-
-    @BindingAdapter({"createdAt"})
-    public static void loadTimeCreated(TextView textView, Timestamp createdAt) {
-        textView.setText(Helper.getDateFromUnixTime(createdAt));
+    public void setLikes(ArrayList<String> likes) {
+        mLikes = likes;
     }
 }
