@@ -14,6 +14,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamandroid.snapshare.data.model.Post;
 import com.teamandroid.snapshare.utils.Constants;
+import com.teamandroid.snapshare.data.model.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,11 +47,28 @@ public class FirestoreRepository {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Post> posts = new ArrayList<>();
+                        final List<Post> posts = new ArrayList<>();
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            Post post = document.toObject(Post.class);
+                            final Post post = document.toObject(Post.class);
                             post.setId(document.getId());
+                            getUserById(post.getUserId(), new Callback<User>() {
+                                @Override
+                                public void onSuccess(User result) {
+                                    if (result != null) {
+                                        post.setAuthor(result.getUsername());
+                                        Log.d("ahihi",result.getUsername());
+                                        post.setAvatarUrl(result.getAvatarUrl());
+                                    }
+                                    posts.add(post);
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+
+                                }
+                            });
                             posts.add(post);
+
                         }
                         callback.onSuccess(posts);
                     }
@@ -75,7 +93,8 @@ public class FirestoreRepository {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<Post> posts = new ArrayList<>();
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            Post post = document.toObject(Post.class);
+                            final Post post = document.toObject(Post.class);
+
                             posts.add(post);
                         }
                         callback.onSuccess(posts);
@@ -151,6 +170,22 @@ public class FirestoreRepository {
             .document(currentUserId)
             .delete();
     }
+    public void getUserById(String id, final Callback<User> callback) {
+        mFirestore.collection(User.COLLECTION).document(id).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        callback.onSuccess(documentSnapshot.toObject(User.class));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
+    }
+
     public interface Callback<T> {
 
         void onSuccess(T result);
