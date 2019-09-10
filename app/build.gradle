@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 def getProperty(String filename, String propName) {
     def propsFile = rootProject.file(filename)
     if (propsFile.exists()) {
@@ -72,6 +73,7 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:$firebase_firestore"
     implementation "com.google.android.material:material:$android_material_version"
     implementation "androidx.legacy:legacy-support-v4:$legacy_support_v4_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$expresso_version"
