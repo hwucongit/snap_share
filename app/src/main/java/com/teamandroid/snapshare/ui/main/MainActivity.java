@@ -22,6 +22,7 @@ import com.teamandroid.snapshare.utils.Constants;
 public class MainActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager = getSupportFragmentManager();
     private HomeFragment homeFragment = HomeFragment.newInstance();
+    BottomNavigationView navView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
         = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mFragmentManager.beginTransaction()
             .replace(R.id.content_container, homeFragment)
@@ -80,18 +81,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PostActivity.class);
         startActivity(intent);
     }
+
     public void replaceProfileFragment(String userId) {
         Bundle args = new Bundle();
         args.putString(Constants.ARGUMENT_USER_ID, userId);
         ProfileFragment profileFragment = ProfileFragment.newInstance(args);
+        navView.setSelectedItemId(R.id.navigation_account);
         mFragmentManager.beginTransaction()
             .replace(R.id.content_container, profileFragment)
-            .addToBackStack(null)
+            .addToBackStack(HomeFragment.class.getName())
             .commit();
     }
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (mFragmentManager.getBackStackEntryCount() >0) {
+            mFragmentManager.popBackStack();
+        } else {
+            finish();
+        }
     }
 }

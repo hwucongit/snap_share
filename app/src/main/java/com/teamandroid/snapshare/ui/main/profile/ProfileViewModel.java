@@ -63,7 +63,6 @@ public class ProfileViewModel extends ViewModel {
             @Override
             public void onSuccess(List<Post> result) {
                 mPosts.setValue(result);
-                Log.d(TAG, result.size() + "hiep");
             }
 
             @Override

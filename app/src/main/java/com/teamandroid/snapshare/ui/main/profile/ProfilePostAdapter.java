@@ -1,6 +1,7 @@
 package com.teamandroid.snapshare.ui.main.profile;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,12 @@ import java.util.List;
 
 public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.ViewHolder> {
     private List<Post> mData = new ArrayList<>();
+    private OnClickListener mOnClickListener;
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
+    }
+
 
 
     @NonNull
@@ -29,8 +36,14 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.mProfileMainItemBinding.setPost(mData.get(position));
+        holder.mProfileMainItemBinding.profilePostImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnClickListener.onClick(mData.get(position).getId());
+            }
+        });
     }
 
 
@@ -45,12 +58,17 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
         notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private ProfileMainItemBinding mProfileMainItemBinding;
 
         public ViewHolder(@NonNull ProfileMainItemBinding itemBinding) {
             super(itemBinding.getRoot());
             mProfileMainItemBinding = itemBinding;
+
         }
+    }
+
+    interface OnClickListener {
+        void onClick(String postId);
     }
 }
