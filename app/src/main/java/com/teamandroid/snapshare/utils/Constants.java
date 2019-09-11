@@ -6,6 +6,8 @@ public class Constants {
     public static final int RC_SIGN_IN = 9001;
     public static final int START_GOOGLE_AUTH_SCREEN = 123;
     public static final String FOLDER_POST_IMAGE = "Post Image";
+    public static final String FOLDER_AVATAR = "Avatar";
+    public static final String KEY_AVATAR = "_avatar";
     public static final int ZERO = 0;
     public static final String AlGOLIA_INDEX = "Users";
     public static final int LIKE_ACTIVE = 1;

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FirestoreRepository {
     public static FirestoreRepository sInstance;
@@ -186,6 +187,17 @@ public class FirestoreRepository {
                 });
     }
 
+    public void setAvatar(String userId, String avatarUrl, final Callback<Void> callback) {
+        mFirestore.collection(User.COLLECTION)
+            .document(userId)
+            .update(User.FIELD_AVATAR_URL, avatarUrl)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    callback.onSuccess(null);
+                }
+            });
+    }
     public interface Callback<T> {
 
         void onSuccess(T result);

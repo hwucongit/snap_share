@@ -57,6 +57,37 @@ public class FirebaseStorageRepository {
             });
     }
 
+    public void setAvatarImage(Uri uri, String userId, final Callback<Uri> callback) {
+        mStorageRefence = mFirebaseStorage
+            .getReference(Constants.FOLDER_AVATAR)
+            .child(userId + Constants.KEY_AVATAR);
+        UploadTask imageTask = mStorageRefence.putFile(uri);
+        Task<Uri> urlTask = imageTask.continueWithTask(
+            new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task)
+                    throws Exception {
+                    if (!task.isSuccessful())
+                        throw task.getException();
+                    return mStorageRefence.getDownloadUrl();
+                }
+            })
+            .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess(task.getResult());
+                    }
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    callback.onFailure(e);
+                }
+            });
+    }
+
     public interface Callback<T> {
         void onSuccess(T result);
         void onFailure(Exception e);

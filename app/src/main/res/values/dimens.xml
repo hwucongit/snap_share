@@ -59,4 +59,6 @@
     <dimen name="profile_image_size_72dp">72dp</dimen>
     <dimen name="profile_list_margin_top__10dp">10dp</dimen>
     <dimen name="height_button_follow">30dp</dimen>
+    <dimen name="width_avatar_profile">80dp</dimen>
+    <dimen name="height_avatar_profile">80dp</dimen>
 </resources>

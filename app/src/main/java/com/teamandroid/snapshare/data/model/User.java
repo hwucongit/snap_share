@@ -13,8 +13,8 @@ public class User {
     public static final String COLLECTION = "Users";
     public static final String FIELD_ID = "id";
     public static final String FIELD_USERNAME = "username";
-    public static final String FIELD_FULL_NAME = "full_name";
-    public static final String FIELD_AVATAR_URL = "avatar_url";
+    public static final String FIELD_FULL_NAME = "fullName";
+    public static final String FIELD_AVATAR_URL = "avatarUrl";
     private String mId;
     private String mUsername;
     private String mFullName;

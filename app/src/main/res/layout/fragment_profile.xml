@@ -5,6 +5,9 @@
         <variable
             name="ProfileViewModel"
             type="com.teamandroid.snapshare.ui.main.profile.ProfileViewModel" />
+        <variable
+            name="User"
+            type="com.teamandroid.snapshare.data.model.User" />
 
     </data>
 
@@ -32,8 +35,8 @@
             android:layout_below="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/post_default_padding"
-            android:background="@color/style_color_accent">
+            android:background="@color/colorGray"
+            android:padding="@dimen/post_default_padding">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_avatar"
@@ -44,39 +47,38 @@
                 android:layout_marginTop="@dimen/post_default_margin"
                 android:layout_marginEnd="@dimen/post_default_margin"
                 android:layout_marginBottom="@dimen/post_default_margin"
-                android:src="@drawable/ic_launcher" />
+                avatarUrl="@{User.avatarUrl}" />
 
             <TextView
                 android:id="@+id/profile_display_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/profile_avatar"
-                android:text="@string/username"
+                android:text="@{User.username}"
                 android:layout_margin="@dimen/post_default_margin"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/profile_email"
+                android:id="@+id/profile_full_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile_display_name"
                 android:layout_alignLeft="@+id/profile_display_name"
-                android:text="@string/full_name" />
+                android:text="@{User.fullName}" />
 
             <TextView
                 android:id="@+id/profile_posts_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/profile_email"
-                android:layout_centerInParent="true"
-                android:text="1000 posts"/>
+                android:layout_below="@id/profile_avatar"
+                android:layout_centerInParent="true"/>
 
             <Button
                 android:id="@+id/button_follow"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_button_follow"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/profile_display_name"
+                android:layout_toRightOf="@id/profile_full_name"
                 android:background="@drawable/background_button_register"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite"/>

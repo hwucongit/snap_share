@@ -1,6 +1,7 @@
 package com.teamandroid.snapshare.ui.main.profile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +28,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.Post;
+import com.teamandroid.snapshare.data.model.User;
+import com.teamandroid.snapshare.data.repository.FirestoreRepository;
 import com.teamandroid.snapshare.databinding.FragmentProfileBinding;
 import com.teamandroid.snapshare.databinding.ProfileMainItemBinding;
 import com.teamandroid.snapshare.generated.callback.OnClickListener;
 import com.teamandroid.snapshare.utils.Constants;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.List;
+import java.util.Objects;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnClickListener {
     private final int colNumb = 3;
@@ -44,6 +51,7 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnCl
     private ProfileMainItemBinding mItemBinding;
     private ProfileViewModel mProfileViewModel;
     private String mCurrentUserId;
+    private User mUser;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -81,14 +89,16 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnCl
         }
         if (mUserId != null && user != null && mUserId.equals(user.getUid())) {
             mBinding.buttonFollow.setVisibility(View.GONE);
+            mBinding.profileAvatar.setEnabled(true);
         }
-        if (mUserId != null && user != null && !mUserId.equals(user.getUid())){
-            mProfileViewModel.checkFollowingState(user.getUid(),mUserId);
+        if (mUserId != null && user != null && !mUserId.equals(user.getUid())) {
+            mProfileViewModel.checkFollowingState(user.getUid(), mUserId);
+            mBinding.profileAvatar.setEnabled(false);
             listenFollow();
         }
-
-        listenToPosts();
+        loadUserInfo(mUserId);
         mProfileViewModel.getPosts(mUserId);
+        listenLoadPosts();
     }
 
     @Override
@@ -115,7 +125,6 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnCl
         });
     }
 
-
     private void init(View rootView) {
         mToolbar = rootView.findViewById(R.id.toolbar);
         setToolbar();
@@ -130,27 +139,24 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnCl
             public void onClick(View view) {
                 if (mProfileViewModel.getIsFollowed().getValue() != null) {
                     if (mProfileViewModel.getIsFollowed().getValue())
-                        mProfileViewModel.unFollowUser(mCurrentUserId,mUserId);
+                        mProfileViewModel.unFollowUser(mCurrentUserId, mUserId);
                     else
-                        mProfileViewModel.followUser(mCurrentUserId,mUserId);
+                        mProfileViewModel.followUser(mCurrentUserId, mUserId);
                 }
+            }
+        });
+        mBinding.profileAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openChooseImageScreen();
             }
         });
     }
 
     private void handleArguments() {
-        //FIXME: get args from getArguments
-        // Handle passed arguments to define running mode
         Bundle args = getArguments();
         if (args != null) {
             mUserId = args.getString(Constants.ARGUMENT_USER_ID);
-        }
-        //TODO: got userId, fetch
-        if (mProfileViewModel.displayingCurrentUser(args)) {
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-            mProfileViewModel.setProfileUser(account);
-        } else {
-            mProfileViewModel.setProfileUser(args);
         }
     }
 
@@ -160,7 +166,7 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnCl
         ((AppCompatActivity) fragmentActivity).setSupportActionBar(mToolbar);
     }
 
-    private void listenToPosts() {
+    private void listenLoadPosts() {
         mProfileViewModel.getUserPosts()
             .observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
                 @Override
@@ -168,6 +174,49 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnCl
                     mProfilePostAdapter.setData(posts);
                 }
             });
+        mProfileViewModel.getTotalPost()
+            .observe(this, new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer postNumber) {
+                    String totalPost = String.format(getString(R.string.format_total_post),
+                        postNumber, postNumber > 1 ? "s" : "");
+                    mBinding.profilePostsNumber.setText(totalPost);
+                }
+            });
+    }
+
+    private void loadUserInfo(final String userId) {
+        FirestoreRepository.getInstance().getUserById(userId,
+            new FirestoreRepository.Callback<User>() {
+                @Override
+                public void onSuccess(User result) {
+                    mBinding.setUser(result);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+    }
+    private void openChooseImageScreen() {
+        CropImage
+            .activity()
+            .start(Objects.requireNonNull(getActivity()),this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                mProfileViewModel.changeAvatarImage(resultUri,mUserId);
+                mBinding.profileAvatar.setImageURI(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
     }
 
 
