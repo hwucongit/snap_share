@@ -1,5 +1,6 @@
 package com.teamandroid.snapshare.ui.register;
 
+import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamandroid.snapshare.BuildConfig;
+import com.teamandroid.snapshare.data.local.AppPreferencesHelper;
 import com.teamandroid.snapshare.data.model.User;
 import com.teamandroid.snapshare.data.model.UserRegister;
 import com.teamandroid.snapshare.utils.Constants;

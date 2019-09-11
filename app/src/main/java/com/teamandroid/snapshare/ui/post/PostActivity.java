@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.teamandroid.snapshare.R;
+import com.teamandroid.snapshare.data.local.AppPreferencesHelper;
 import com.teamandroid.snapshare.data.model.Post;
 import com.teamandroid.snapshare.databinding.ActivityPostBinding;
 import com.teamandroid.snapshare.utils.Helper;
@@ -22,7 +23,6 @@ public class PostActivity extends AppCompatActivity {
     private ActivityPostBinding mBinding;
     private PostViewModel mPostViewModel;
     private ProgressDialog mProgressDialog;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

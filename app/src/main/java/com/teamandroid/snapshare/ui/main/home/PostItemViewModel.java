@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.Post;
+import com.teamandroid.snapshare.data.model.User;
 import com.teamandroid.snapshare.data.repository.FirestoreRepository;
 import com.teamandroid.snapshare.utils.Helper;
 
@@ -30,16 +31,15 @@ public class PostItemViewModel extends ViewModel {
 
     public PostItemViewModel(Post post) {
         mPost = post;
-        author.setValue(mPost.getAuthor());
         userId.setValue(mPost.getUserId());
-        avatarUrl.setValue(mPost.getAvatarUrl());
         imageUrl.setValue(mPost.getImageUrl());
         caption.setValue(mPost.getCaption());
         likeCount.setValue(mPost.getLikeCount());
         createdAt.setValue(mPost.getCreatedAt());
         likes.setValue(mPost.getLikes());
+        author.setValue(mPost.getAuthor());
+        avatarUrl.setValue(mPost.getAvatarUrl());
     }
-
     public MutableLiveData<Integer> getLikeCount() {
         return likeCount;
     }
@@ -89,5 +89,4 @@ public class PostItemViewModel extends ViewModel {
             }
         });
     }
-
 }

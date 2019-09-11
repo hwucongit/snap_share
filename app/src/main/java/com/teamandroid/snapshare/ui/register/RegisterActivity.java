@@ -68,8 +68,9 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterViewModel.getIsRegisterSuccessful().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (aBoolean)
+                if (aBoolean) {
                     openMainActivity();
+                }
                 else
                     Helper.showToast(getApplicationContext(),
                             getResources().getString(R.string.fail_try_again_later));
