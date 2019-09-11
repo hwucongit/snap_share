@@ -2,8 +2,8 @@
 <layout>
     <data>
         <variable
-            name="ProfileViewModel"
-            type="com.teamandroid.snapshare.ui.main.profile.ProfileViewModel" />
+            name="ViewModel"
+            type="com.teamandroid.snapshare.ui.main.profile.DetailedPostViewModel" />
     </data>
 
 

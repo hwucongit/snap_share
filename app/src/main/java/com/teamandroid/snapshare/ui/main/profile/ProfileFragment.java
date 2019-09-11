@@ -1,5 +1,6 @@
 package com.teamandroid.snapshare.ui.main.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,18 +28,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.teamandroid.snapshare.R;
 import com.teamandroid.snapshare.data.model.Post;
 import com.teamandroid.snapshare.databinding.FragmentProfileBinding;
+import com.teamandroid.snapshare.databinding.ProfileMainItemBinding;
 import com.teamandroid.snapshare.generated.callback.OnClickListener;
 import com.teamandroid.snapshare.utils.Constants;
 
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnClickListener {
     private final int colNumb = 3;
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private ProfilePostAdapter mProfilePostAdapter;
     private String mUserId;
     private FragmentProfileBinding mBinding;
+    private ProfileMainItemBinding mItemBinding;
     private ProfileViewModel mProfileViewModel;
     private String mCurrentUserId;
 
@@ -67,7 +70,11 @@ public class ProfileFragment extends Fragment {
         mProfileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         mBinding.setProfileViewModel(mProfileViewModel);
         mBinding.setLifecycleOwner(this);
+
+        // Get arguments, pass received userId to mUserId
         handleArguments();
+
+        // Signed user = mCurrentUSer
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             mCurrentUserId = user.getUid();
@@ -79,8 +86,21 @@ public class ProfileFragment extends Fragment {
             mProfileViewModel.checkFollowingState(user.getUid(),mUserId);
             listenFollow();
         }
-        mProfileViewModel.getPosts(mUserId);
+
         listenToPosts();
+        mProfileViewModel.getPosts(mUserId);
+    }
+
+    @Override
+    public void onClick(String postId) {
+        Intent intent = new Intent(getContext(), DetailedPostActivity.class);
+        Bundle args = new Bundle();
+        args.putString(Constants.ARGUMENT_POST_ID, postId);
+        args.putString(Constants.ARGUMENT_USER_ID, this.mCurrentUserId);
+        intent.putExtras(args);
+
+        startActivity(intent);
+        //TODO: put this fragment to backstack and open activity
     }
 
     private void listenFollow() {
@@ -102,7 +122,9 @@ public class ProfileFragment extends Fragment {
         mRecyclerView = rootView.findViewById(R.id.profile_posts_list);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), colNumb));
         mProfilePostAdapter = new ProfilePostAdapter();
+        mProfilePostAdapter.setOnClickListener(this);
         mRecyclerView.setAdapter(mProfilePostAdapter);
+
         mBinding.buttonFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +145,7 @@ public class ProfileFragment extends Fragment {
         if (args != null) {
             mUserId = args.getString(Constants.ARGUMENT_USER_ID);
         }
+        //TODO: got userId, fetch
         if (mProfileViewModel.displayingCurrentUser(args)) {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
             mProfileViewModel.setProfileUser(account);
@@ -146,6 +169,8 @@ public class ProfileFragment extends Fragment {
                 }
             });
     }
+
+
 }
 
 

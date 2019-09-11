@@ -17,6 +17,7 @@ public class Constants {
     public static final String PROFILE_USER_DISPLAY_NAME = "";
     public static final String PROFILE_USER_AVATAR = "";
     public static final String ARGUMENT_USER_ID  = "ARGUMENT_USER_ID";
+    public static final String ARGUMENT_POST_ID  = "ARGUMENT_POST_ID";
     public static final String COLLECTION_FOLLOW = "Follows";
     public static final String FOLLOW_FIELD_FOLLOWING = "Following";
     public static final String FOLLOW_FIELD_FOLLOWER = "Follower";
